@@ -5,6 +5,65 @@ Temporal embeddings for the retreival blocks.
 
 Our world is dynamic and the nature of text on the web is constantly changing. In recent years, we have seen a wide-scale adoption of Large Language Models (LLMs). Most LLMs are trained with static snapshots of knowledge bases. LLMs are not only very computationally expensive but are prone to the semantic shift of existing tokens and the sub-optimal and failed understanding of new tokens. To overcome these challenges in this paper, I in- troduce the Dynamic Large Language modEl with Retrieval (DLLER). We augment the current state-of-the-art methods (Hombaiah et al.,2021) that rely on sampling methods and incremental training with weighted retrieval blocks.
 
+
+
+### Datasets
+
+My datasets are fairly standard. I will be combining two different datasets. These include Pile for general language modelling. For testing the models, I will be using the large Twitter dataset and StreamingQA  dataset. 
+
+StreamingQA is a human-written and generated questions datasets which are answered from 14 years of time-stamped news articles. Both these datasets have explicit timestamps to help guide LLMs. 
+
+### Models
+
+
+One of the most surprising changes in the LLM space has been the addition of explicit memory. These auto-regressive language models are conditioned on document chunks retrieved from a
+large corpus, based on local similarity with preceding tokens. One main advantage of these approaches is the relative simplicity and performance matching of models with 25x less parameters. This approach allows us to effectively skip the retraining part of LLMs. 
+
+Recent works by Deepmind have introduced us to Retrieval-Enhanced Transformer (RETRO). Retro combines a frozen Bert
+retriever, a differentiable encoder, and a chunked cross-attention mechanism to predict tokens based on an order of magnitude more data than what is typically consumed during training. 
+
+
+
+### Novel Extensions
+
+
+One of the significant drawbacks of the retrieval block is every query is given the same regard in the chunked attention block. One of the goals of the project will be to augment this  block with information relating to time. 
+
+This approach is a natural extension of positional embeddings applied to the retrieved block. Positional embeddings combine positional information with semantic information. Time can be thought of as a positional in another latent space. 
+
+The downstream effects of the task will be immense as the natural extension of time is quality or other ranking information. Although widely used in the Information Retrieval (IR) tasks, these have not been generalized to the NLP field. 
+
+### Baselines
+
+The current baselines of the dynamic language modelling include:
+
+* Base T-5 Model
+* Retrieval Aigmeneted Generation (RAG) for Knowledge Intensive tasks
+* Fusion-in-Decoder (FID) for Knowledge Intensive tasks
+* Retrieval-Enhanced Transformer (RETRO) 
+
+
+We will be using a baseline of T5 model. T5 model is a closed model and is trained on data as a snapshot. This is expected to give us the lowest score. 
+
+RAG model combines two different approaches which include pre-trained sequence models and non-parametric retrieval. A parametric memory is a pre-trained seq2seq model and a non-parametric memory is a dense vector index of Wikipedia, accessed with a pre-trained neural retriever. All the retrieved passages are processed in the encoder. 
+
+Fusion-in-Decoder augments the  RAG model by encoding all the retrieved texts and concats the compressed representations. The main difference with RAG is the encoder trains every retrieved block separately. 
+
+
+
+## Evaluation
+
+We will be evaluating all the models on the StreamingQA dataset. It contains  14 years (2007–2020) of English WMT news together with their publication dates, as our knowledge corpus (approx. 11M articles). The main benefit of the task is it focuses on both temporal effects. The task is split into quarters with dates. When the lag is negative, the model knowledge is lagging behind a question date (QD). This means that the model is missing information and has not considered recent events. When the lag is positive, the previous information has been overwritten and the model has forgotten previous results. 
+ 
+The dataset uses the same metrics as question-answering tasks. These include F1 and the exact match (EM). Although this is the language modeling task, it would be really great if the retrieval block can be evaluated separately. These would include metrics like Mean average precision and Normalized Discounted Cumulative Gain. 
+
+## Experiments
+
+Retrieval-based methods have experimental evidence suggesting combining vectors in the encoder or passing them separately. Although FID and DAG models are Encoder-decoder architecture, RETRO is a decoder architecture. There is not a public benchmark comparing both these benchmarks. 
+
+A major chunk of the time will be spent on ranking the retrieval query and passing temporal information less explicitly. The model needs to understand today as 28th September not like GPT-3 March 2020. 
+
+
 Project Organization
 ------------
 
