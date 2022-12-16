@@ -6,6 +6,37 @@ Temporal embeddings for the retreival blocks.
 Our world is dynamic and the nature of text on the web is constantly changing. In recent years, we have seen a wide-scale adoption of Large Language Models (LLMs). Most LLMs are trained with static snapshots of knowledge bases. LLMs are not only very computationally expensive but are prone to the semantic shift of existing tokens and the sub-optimal and failed understanding of new tokens. To overcome these challenges in this paper, I in- troduce the Dynamic Large Language modEl with Retrieval (DLLER). We augment the current state-of-the-art methods (Hombaiah et al.,2021) that rely on sampling methods and incremental training with weighted retrieval blocks.
 
 
+### Config environment
+
+Configure the environment with the following keys. All the development was done on a RTX 6000 machine and I can only gurantee for it to work on it. 
+```
+conda create -n dller python=3.7
+conda activate dller
+conda install pytorch torchvision torchaudio cudatoolkit=11.6 -c pytorch-lts -c nvidia 
+conda install -c conda-forge nvidia-apex
+git clone https://github.com/saisurbehera/dller_NLG.git
+cd dller_NLG
+pip -r requirments.txt
+```
+
+
+All the baselines based on trained Memorizing transformers , base RETRO and others
+```
+gsutil cp -r gs://ss6365-coms-public-nlg/ .
+```
+
+Baseline Memorizing transformer should look like this
+```
+python3 transformer/ht_main.py --gin_file=transformer/configs/base_htrans.gin --workdir=/home/saisur/meliad/memory_news/  --gin_file=/home/saisur/meliad/transformer/configs/size/small_37M.gin --gin_file=transformer/configs/options/positions_t5.gin --gin_file=transformer/configs/options/seq_512.gin --gin_file=transformer/configs/options/external_memory_32k.gin --default_data_dir=./
+```
+
+T5 Model
+```
+python3 transformer/ht_main.py --gin_file=transformer/configs/base_htrans.gin --workdir=/home/saisur/meliad/memory_news/  --gin_file=/home/saisur/meliad/transformer/configs/size/small_37M.gin --gin_file=transformer/configs/options/positions_t5.gin --gin_file=transformer/configs/options/seq_512.gin --default_data_dir=./
+```
+
+Although the Meliad library looks the same in the repo, the data portion has changed slightly and needs the text_closed_qa_dataset/ which should be in the public repo.
+
 
 ### Datasets
 
