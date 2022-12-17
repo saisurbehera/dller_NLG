@@ -46,9 +46,9 @@ You can find the completed run files in the public GPT2 repo
 python run_clm_flax.py \
     --output_dir="./" \
     --model_type="gpt2" \
-    --config_name="./norwegian-gpt2" \
-    --tokenizer_name="./norwegian-gpt2" \
-    --dataset_name="oscar" \
+    --config_name="./gpt2" \
+    --tokenizer_name="./gpt2" \
+    --dataset_name="text_closed_qa_dataset" \
     --dataset_config_name="unshuffled_deduplicated_no" \
     --do_train --do_eval \
     --block_size="512" \
