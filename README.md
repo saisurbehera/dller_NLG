@@ -25,33 +25,57 @@ All the baselines based on trained Memorizing transformers , base RETRO and othe
 gsutil cp -r gs://ss6365-coms-public-nlg/ .
 ```
 
+
+#### Baseline Memorizing Transformer 
 Baseline Memorizing transformer should look like this
 ```
 python3 transformer/ht_main.py --gin_file=transformer/configs/base_htrans.gin --workdir=/home/saisur/meliad/memory_news/  --gin_file=/home/saisur/meliad/transformer/configs/size/small_37M.gin --gin_file=transformer/configs/options/positions_t5.gin --gin_file=transformer/configs/options/seq_512.gin --gin_file=transformer/configs/options/external_memory_32k.gin --default_data_dir=./
 ```
-
-T5 Model
+#### Transformer-XL with sliding window
 ```
 python3 transformer/ht_main.py --gin_file=transformer/configs/base_htrans.gin --workdir=/home/saisur/meliad/memory_news/  --gin_file=/home/saisur/meliad/transformer/configs/size/small_37M.gin --gin_file=transformer/configs/options/positions_t5.gin --gin_file=transformer/configs/options/seq_512.gin --default_data_dir=./
 ```
 
 Although the Meliad library looks the same in the repo, the data portion has changed slightly and needs the text_closed_qa_dataset/ which should be in the public repo.
 
+#### Baseline GPT-2 Model with LM
+
+You can find the completed run files in the public GPT2 repo
+
+```
+python run_clm_flax.py \
+    --output_dir="./" \
+    --model_type="gpt2" \
+    --config_name="./norwegian-gpt2" \
+    --tokenizer_name="./norwegian-gpt2" \
+    --dataset_name="oscar" \
+    --dataset_config_name="unshuffled_deduplicated_no" \
+    --do_train --do_eval \
+    --block_size="512" \
+    --per_device_train_batch_size="64" \
+    --per_device_eval_batch_size="64" \
+    --learning_rate="5e-3" --warmup_steps="1000" \
+    --adam_beta1="0.9" --adam_beta2="0.98" --weight_decay="0.01" \
+    --overwrite_output_dir \
+    --num_train_epochs="20" \
+    --logging_steps="500" \
+    --save_steps="2500" \
+    --eval_steps="2500" 
+```
+
+
+#### Baseline RETRO Model 
+
+You can find the baseline RETRO model in the RETRO folder. The code to train the model was done on an IPYNB files in the [models](models/RETRO) folder.
+
+
+
+
 
 ### Datasets
 
-My datasets are fairly standard. I will be combining two different datasets. These include Pile for general language modelling. For testing the models, I will be using the large Twitter dataset and StreamingQA  dataset. 
-
-StreamingQA is a human-written and generated questions datasets which are answered from 14 years of time-stamped news articles. Both these datasets have explicit timestamps to help guide LLMs. 
-
-### Models
 
 
-One of the most surprising changes in the LLM space has been the addition of explicit memory. These auto-regressive language models are conditioned on document chunks retrieved from a
-large corpus, based on local similarity with preceding tokens. One main advantage of these approaches is the relative simplicity and performance matching of models with 25x less parameters. This approach allows us to effectively skip the retraining part of LLMs. 
-
-Recent works by Deepmind have introduced us to Retrieval-Enhanced Transformer (RETRO). Retro combines a frozen Bert
-retriever, a differentiable encoder, and a chunked cross-attention mechanism to predict tokens based on an order of magnitude more data than what is typically consumed during training. 
 
 
 
@@ -64,35 +88,6 @@ This approach is a natural extension of positional embeddings applied to the ret
 
 The downstream effects of the task will be immense as the natural extension of time is quality or other ranking information. Although widely used in the Information Retrieval (IR) tasks, these have not been generalized to the NLP field. 
 
-### Baselines
-
-The current baselines of the dynamic language modelling include:
-
-* Base T-5 Model
-* Retrieval Aigmeneted Generation (RAG) for Knowledge Intensive tasks
-* Fusion-in-Decoder (FID) for Knowledge Intensive tasks
-* Retrieval-Enhanced Transformer (RETRO) 
-
-
-We will be using a baseline of T5 model. T5 model is a closed model and is trained on data as a snapshot. This is expected to give us the lowest score. 
-
-RAG model combines two different approaches which include pre-trained sequence models and non-parametric retrieval. A parametric memory is a pre-trained seq2seq model and a non-parametric memory is a dense vector index of Wikipedia, accessed with a pre-trained neural retriever. All the retrieved passages are processed in the encoder. 
-
-Fusion-in-Decoder augments the  RAG model by encoding all the retrieved texts and concats the compressed representations. The main difference with RAG is the encoder trains every retrieved block separately. 
-
-
-
-## Evaluation
-
-We will be evaluating all the models on the StreamingQA dataset. It contains  14 years (2007–2020) of English WMT news together with their publication dates, as our knowledge corpus (approx. 11M articles). The main benefit of the task is it focuses on both temporal effects. The task is split into quarters with dates. When the lag is negative, the model knowledge is lagging behind a question date (QD). This means that the model is missing information and has not considered recent events. When the lag is positive, the previous information has been overwritten and the model has forgotten previous results. 
- 
-The dataset uses the same metrics as question-answering tasks. These include F1 and the exact match (EM). Although this is the language modeling task, it would be really great if the retrieval block can be evaluated separately. These would include metrics like Mean average precision and Normalized Discounted Cumulative Gain. 
-
-## Experiments
-
-Retrieval-based methods have experimental evidence suggesting combining vectors in the encoder or passing them separately. Although FID and DAG models are Encoder-decoder architecture, RETRO is a decoder architecture. There is not a public benchmark comparing both these benchmarks. 
-
-A major chunk of the time will be spent on ranking the retrieval query and passing temporal information less explicitly. The model needs to understand today as 28th September not like GPT-3 March 2020. 
 
 
 Project Organization
