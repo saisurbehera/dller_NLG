@@ -72,7 +72,7 @@ You can find the baseline RETRO model in the RETRO folder. The code to train the
 
 ### Menzi Baseline Models
 
-Most of the code, has been an improvement from Mengzi Lang code. All the retrofitting code was based on their baseline and then improved on. Please star their repo here
+Most of the code, has been an improvement from Mengzi Lang code. All the retrofitting code was based on their baseline and then improved on. Please star their repo here. The retreived component is from here. I modify them to get the temporal information.
 
 ```
 https://github.com/Langboat/mengzi-retrieval-lm
