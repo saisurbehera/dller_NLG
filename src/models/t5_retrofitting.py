@@ -757,6 +757,7 @@ class RetroModel(RETROPreTrainedModel):
         output_attentions: Optional[bool] = None,
         output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = None,
+        retrieval_dates : Optional[torch.Tensor] = None,
     ) -> Union[Tuple[torch.Tensor], BaseModelOutputWithPastAndCrossAttentions]:
         output_attentions = output_attentions if output_attentions is not None else self.config.output_attentions
         output_hidden_states = (
@@ -832,6 +833,8 @@ class RetroModel(RETROPreTrainedModel):
 
             num_seq_chunks = n // self.chunk_size
             assert num_chunks == num_seq_chunks, f'sequence requires {num_seq_chunks} retrieved chunks, but only {num_chunks} passed in'
+            if retrieval_dates:
+                retrieval = retrieval_dates+retrieval
 
             retrieval = self.wte(retrieval)
 

@@ -46,7 +46,7 @@ class IndexActor(object):
             cursor = txn.cursor()
             for key, value in cursor:
                 item = pickle.loads(value)
-                text = item['text']+str(item['next_chunk'] or '')
+                text = item['text']+str(item['next_chunk'] or '') + item["date"]
                 ztext = zlib.compress(text.encode('utf-8'))
                 self.records[key.decode('utf-8')] = ztext
         env.close()

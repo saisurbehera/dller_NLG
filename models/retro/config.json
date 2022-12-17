@@ -1,0 +1,70 @@
+{
+  "_name_or_path": "Langboat/ReGPT-125M-200G",
+  "activation_function": "gelu_new",
+  "architectures": [
+    "RetroModel"
+  ],
+  "attention_dropout": 0,
+  "attention_layers": [
+    "global",
+    "local",
+    "global",
+    "local",
+    "global",
+    "local",
+    "global",
+    "local",
+    "global",
+    "local",
+    "global",
+    "local"
+  ],
+  "attention_types": [
+    [
+      [
+        "global",
+        "local"
+      ],
+      6
+    ]
+  ],
+  "bos_token_id": 50256,
+  "chunk_size": 64,
+  "dec_attn_dropout": 0.25,
+  "dec_cross_attn_layers": [
+    5,
+    128
+  ],
+  "dec_ff_dropout": 0.25,
+  "dec_heads": 16,
+  "dim_head": 64,
+  "embed_dropout": 0,
+  "enc_att_dropout": 0.0,
+  "enc_cross_attn_layers": null,
+  "enc_depth": 2,
+  "enc_dim": 768,
+  "enc_ff_dropout": 0.0,
+  "enc_heads": 16,
+  "eos_token_id": 50256,
+  "ff_mult": 4,
+  "gradient_checkpointing": false,
+  "hidden_size": 768,
+  "initializer_range": 0.02,
+  "intermediate_size": null,
+  "layer_norm_epsilon": 1e-05,
+  "max_position_embeddings": 2048,
+  "model_type": "RETRO",
+  "num_heads": 12,
+  "num_layers": 12,
+  "resid_dropout": 0,
+  "summary_activation": null,
+  "summary_first_dropout": 0.1,
+  "summary_proj_to_labels": true,
+  "summary_type": "cls_index",
+  "summary_use_proj": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.22.0.dev0",
+  "use_cache": true,
+  "vocab_size": 50257,
+  "window_size": 256
+}

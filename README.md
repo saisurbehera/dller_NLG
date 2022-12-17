@@ -20,14 +20,16 @@ pip -r requirments.txt
 ```
 
 
-All the baselines based on trained Memorizing transformers , base RETRO and others
+All the baselines based on trained Memorizing transformers , base RETRO and others.
+
+Warning this is pretty big for the size. 
 ```
 gsutil cp -r gs://ss6365-coms-public-nlg/ .
 ```
 
 
 #### Baseline Memorizing Transformer 
-Baseline Memorizing transformer should look like this
+Baseline Memorizing transformer should look like this. This whole repo was provided by google research
 ```
 python3 transformer/ht_main.py --gin_file=transformer/configs/base_htrans.gin --workdir=/home/saisur/meliad/memory_news/  --gin_file=/home/saisur/meliad/transformer/configs/size/small_37M.gin --gin_file=transformer/configs/options/positions_t5.gin --gin_file=transformer/configs/options/seq_512.gin --gin_file=transformer/configs/options/external_memory_32k.gin --default_data_dir=./
 ```
@@ -48,7 +50,7 @@ python run_clm_flax.py \
     --model_type="gpt2" \
     --config_name="./gpt2" \
     --tokenizer_name="./gpt2" \
-    --dataset_name="text_closed_qa_dataset" \
+    --dataset_name="text_closed_qa_datasetg" \
     --dataset_config_name="unshuffled_deduplicated_no" \
     --do_train --do_eval \
     --block_size="512" \
@@ -66,27 +68,55 @@ python run_clm_flax.py \
 
 #### Baseline RETRO Model 
 
-You can find the baseline RETRO model in the RETRO folder. The code to train the model was done on an IPYNB files in the [models](models/RETRO) folder.
+You can find the baseline RETRO model in the RETRO folder. The code to train the model was done on an IPYNB files in the [jupyter file](models/RETRO/train.ipynb).
 
+### Menzi Baseline Models
 
+Most of the code, has been an improvement from Mengzi Lang code. All the retrofitting code was based on their baseline and then improved on. Please star their repo here
+
+```
+https://github.com/Langboat/mengzi-retrieval-lm
+```
 
 
 
 ### Datasets
 
+We use the streamingqa dataset. For the streamingqa dataset, we filter all the news and pass in text_closed_qa_dataset/ datasets with temporal information and convert it to a db. 
+We do this by running the following commands. 
 
 
+We convert the dataset
+```
+gsutil cp -r gs://ss6365-coms-public-nlg/text_closed_qa_train/ .
+cd retreival-server
+./process_data.sh
+```
+
+### Model
+
+Check out the model at:
+
+```
+gs://ss6365-coms-public-nlg/retro
+```
+
+Python load the model from 
+```
+import sys
+sys.path.insert(0, '/workspace/dller_NLG/src/') 
+
+from models.t5_retrofitting import  RetroModel
+model = RetroModel.from_pretrained('retro')
+```
+
+To run the  model, you will need to start a retreieval server.
+```
+cd retreival-server
+python api.py --db-path ./db --config 
+```
 
 
-
-### Novel Extensions
-
-
-One of the significant drawbacks of the retrieval block is every query is given the same regard in the chunked attention block. One of the goals of the project will be to augment this  block with information relating to time. 
-
-This approach is a natural extension of positional embeddings applied to the retrieved block. Positional embeddings combine positional information with semantic information. Time can be thought of as a positional in another latent space. 
-
-The downstream effects of the task will be immense as the natural extension of time is quality or other ranking information. Although widely used in the Information Retrieval (IR) tasks, these have not been generalized to the NLP field. 
 
 
 

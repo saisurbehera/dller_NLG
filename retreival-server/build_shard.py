@@ -41,7 +41,7 @@ class SplitChunk:
             chunk_mappings = offset_mapping[chunk_offset*64:chunk_offset*64+64]
             chunk_text = line[chunk_mappings[0][0]:chunk_mappings[-1][1]]
             chunk_data.append({
-                'text': chunk_text,
+                'text': chunk_text + str(date),
                 'next_chunk': None,
                 'date':date
             })
